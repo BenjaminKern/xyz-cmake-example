@@ -1,0 +1,68 @@
+[
+  {
+    "project": {
+      "name": "foobar",
+      "options": {
+        "shared_libraries" : true,
+        "hide_symbols" : false
+      },
+      "executables" : {
+        "foobar" : {
+          "find_packages" : ["foo", "bar"],
+          "link_libraries": {
+            "private": ["foobar::bar", "foobar::foo"]
+          }
+        },
+        "foobar_c" : {
+          "language" : {
+            "type" : "C",
+            "standard" : 17,
+            "extensions" : false
+          },
+          "find_packages" : ["foo_c"],
+          "link_libraries": {
+            "private": ["foobar::foo_c"]
+          }
+        }
+      },
+      "libraries": {
+        "foo": {
+          "find_packages" : ["ZLIB", "duh"],
+          "link_libraries": {
+            "public": ["foobar::duh"],
+            "private": ["ZLIB::ZLIB"]
+          },
+          "compile_definitions": {
+            "public": ["DUH"]
+          }
+        },
+        "duh" : {},
+        "foo_c" : {
+          "language" : {
+            "type" : "C",
+            "standard" : 17,
+            "extensions" : false
+          }
+        },
+        "bar": {
+          "language" : {
+            "standard" : 14,
+            "extensions" : false
+          },
+          "find_packages" : ["foo", "foo_c"],
+          "link_libraries": {
+            "public": ["foobar::foo"],
+            "private": ["foobar::foo_c"]
+          }
+        }
+      },
+      "cpack": {
+        "debian" : {
+          "dependencies": ["zlib1g", "libc6 (>= 2.3.1-6)"],
+          "contact": "contact",
+          "description": "description"
+        }
+      }
+    }
+  }
+]
