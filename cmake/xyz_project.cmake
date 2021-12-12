@@ -53,10 +53,7 @@ endfunction()
 
 function(xyz_configure project_config_json project_version)
 
-  if(BUILD_TESTS)
-    add_subdirectory(third-party/doctest)
-    add_subdirectory(third-party/greatest)
-  endif()
+  add_subdirectory(third-party)
 
   _xyz_configure(libs libraries ${project_config_json})
   _xyz_configure(exes executables ${project_config_json})
@@ -239,7 +236,11 @@ function(_xyz_configure_options project_config_json)
 endfunction()
 
 function(_xyz_configure targets target_type project_config_json)
-  string(JSON target_length LENGTH ${project_config_json} project ${target_type})
+  string(JSON target_length ERROR_VARIABLE error LENGTH ${project_config_json} project ${target_type})
+  if(NOT "${error}" STREQUAL "NOTFOUND")
+    set(target_length 0)
+  endif()
+
   if(${target_length} LESS 1)
     message(STATUS "No ${target_type} configured")
     return()
